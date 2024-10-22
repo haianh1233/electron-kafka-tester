@@ -2,14 +2,62 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-    <title>Hello World!</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kafka Health Check</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        input, button {
+            padding: 10px;
+            margin: 10px;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+    </style>
 </head>
 <body>
-<h1>Hello World!</h1>
-We are using Node.js <span id="node-version"></span>,
-Chromium <span id="chrome-version"></span>,
-and Electron <span id="electron-version"></span>.
+<h1>Kafka Health Check</h1>
+<label for="brokers">Enter Kafka Brokers (comma separated):</label><br>
+<input type="text" id="brokers" placeholder="e.g., localhost:9092, broker2:9092"><br>
+<button onclick="checkHealth()">Check Health</button>
+
+<div class="result" id="result">
+    Result will be displayed here...
+</div>
+
+<script>
+    async function checkHealth() {
+        const brokersInput = document.getElementById('brokers').value;
+        const brokers = brokersInput.split(',').map(broker => broker.trim());
+
+        const resultDiv = document.getElementById('result');
+        resultDiv.textContent = 'Checking health...';
+
+        try {
+            const response = await fetch('http://localhost:3000/health', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ brokers })
+            });
+
+            if (response.ok) {
+                const text = await response.text();
+                resultDiv.textContent = `Success: ${text}`;
+            } else {
+                const text = await response.text();
+                resultDiv.textContent = `Error: ${text}`;
+            }
+        } catch (error) {
+            resultDiv.textContent = `Failed to check health: ${error}`;
+        }
+    }
+</script>
 </body>
 </html>

@@ -1,5 +1,6 @@
 const { app, BrowserWindow } = require('electron');
 const path = require('node:path');
+require('./backend/server');
 
 function createWindow () {
     const window = new BrowserWindow({
