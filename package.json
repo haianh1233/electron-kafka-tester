@@ -1,0 +1,15 @@
+{
+  "name": "online-costs-optimizer",
+  "version": "1.0.0",
+  "description": "Online Costs Optimizer Recommender",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "anhnguyen",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^33.0.1"
+  }
+}
