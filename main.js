@@ -1,12 +1,7 @@
 const { app, BrowserWindow } = require('electron');
 const path = require('node:path');
 const { updateElectronApp } = require('update-electron-app');
-const { isDev } = require('electron-is-dev')
 require('./backend/server');
-
-if (isDev) {
-    console.log('Running in development mode');
-}
 
 updateElectronApp();
 

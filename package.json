@@ -9,6 +9,10 @@
     "package": "electron-forge package",
     "make": "electron-forge make"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/haianh1233/electron-kafka-tester.git"
+  },
   "author": "anhnguyen",
   "license": "ISC",
   "devDependencies": {
