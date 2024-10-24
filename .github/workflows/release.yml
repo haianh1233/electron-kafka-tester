@@ -1,10 +1,9 @@
 name: Release app
 
 on:
-  workflow_run:
-    workflows: ["Bump Version"]
-    types:
-      - success
+  push:
+    tags:
+      - 'v*'
 
 jobs:
   build:
