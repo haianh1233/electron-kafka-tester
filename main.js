@@ -3,6 +3,8 @@ const path = require('node:path');
 const { updateElectronApp } = require('update-electron-app');
 require('./backend/server');
 
+console.log(process.env.GITHUB_TOKEN);
+
 updateElectronApp();
 
 function createWindow () {

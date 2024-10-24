@@ -32,8 +32,8 @@ module.exports = {
       name: '@electron-forge/publisher-github',
       config: {
         repository: {
-          owner: 'me',
-          name: 'awesome-thing'
+          owner: 'haianh1233',
+          name: 'electron-kafka-tester'
         },
         prerelease: true
       }
