@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "electron-forge start",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "echo \\\"Error: no backend specified\\\" && exit 1",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish"
@@ -27,14 +27,6 @@
     "@electron-forge/publisher-github": "^7.5.0",
     "@electron/fuses": "^1.8.0",
     "electron": "^33.0.1"
-  },
-  "build": {
-    "extraResources": [
-      {
-        "from": "demo/target/demo-0.0.1-SNAPSHOT.jar",
-        "to": "resources/demo-0.0.1-SNAPSHOT.jar"
-      }
-    ]
   },
   "dependencies": {
     "electron-is-dev": "^3.0.1",

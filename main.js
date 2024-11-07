@@ -22,7 +22,7 @@ async function createWindow() {
 
     const jarPath = isDev
         ? path.join(__dirname, 'demo/target/demo-0.0.1-SNAPSHOT.jar') // Development mode path
-        : path.join(app.getAppPath(), 'resources/demo-0.0.1-SNAPSHOT.jar');
+        : path.join(process.resourcesPath, 'backend/demo-0.0.1-SNAPSHOT.jar'); // Packaged app path
 
     javaProcess = spawn('java', ['-jar', jarPath]);
 
