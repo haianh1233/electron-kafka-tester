@@ -6,19 +6,6 @@ const port = 3000;
 
 app.use(express.json());
 
-const { exec } = require('child_process');
-
-app.post('/run-jar', async (req, res) => {
-    exec('java -jar kafka-electron-test-backend/target/kafka-electron-test-backend-1.0-SNAPSHOT.jar', (error, stdout, stderr) => {
-        if (error) {
-            console.error('Error executing JAR:', error);
-            return res.status(500).send('Error running JAR');
-        }
-        console.log('JAR Output:', stdout);
-        res.status(200).send('JAR executed successfully');
-    });
-});
-
 app.post('/health', async (req, res) => {
     const { brokers } = req.body;
 
