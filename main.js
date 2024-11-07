@@ -4,7 +4,6 @@ const { updateElectronApp } = require('update-electron-app');
 const { spawn } = require('child_process');
 updateElectronApp();
 
-const jarPath = 'demo/target/demo-0.0.1-SNAPSHOT.jar';
 let javaProcess;
 
 async function createWindow() {
