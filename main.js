@@ -7,7 +7,9 @@ updateElectronApp();
 const jarPath = 'demo/target/demo-0.0.1-SNAPSHOT.jar';
 let javaProcess;
 
-function createWindow () {
+async function createWindow() {
+    const isDev = (await import('electron-is-dev')).default;
+
     const window = new BrowserWindow({
         width: 800,
         height: 600,
@@ -18,6 +20,10 @@ function createWindow () {
     });
 
     window.loadFile('index.html');
+
+    const jarPath = isDev
+        ? path.join(__dirname, 'demo/target/demo-0.0.1-SNAPSHOT.jar') // Development mode path
+        : path.join(app.getAppPath(), 'resources/demo-0.0.1-SNAPSHOT.jar');
 
     javaProcess = spawn('java', ['-jar', jarPath]);
 
