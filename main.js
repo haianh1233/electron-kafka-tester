@@ -35,13 +35,13 @@ async function createWindow() {
     } else {
         switch (platform) {
             case 'win32':
-                javaPath = path.join(process.resourcesPath, 'jre/windows/jdk-17.0.13+11-jre/bin/java.exe'); // Windows production path
+                javaPath = path.join(process.resourcesPath, '/jdk-17.0.13+11-jre/bin/java.exe'); // Windows production path
                 break;
             case 'darwin':
-                javaPath = path.join(process.resourcesPath, 'jre/macos/jdk-17.0.13+11-jre/Contents/Home/bin/java'); // macOS production path
+                javaPath = path.join(process.resourcesPath, '/jdk-17.0.13+11-jre/Contents/Home/bin/java'); // macOS production path
                 break;
             case 'linux':
-                javaPath = path.join(process.resourcesPath, 'jre/linux/jdk-17.0.13+11-jre/bin/java'); // Linux production path
+                javaPath = path.join(process.resourcesPath, '/jdk-17.0.13+11-jre/bin/java'); // Linux production path
                 break;
             default:
                 throw new Error(`Unsupported platform: ${platform}`);
