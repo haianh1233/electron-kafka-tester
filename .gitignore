@@ -86,3 +86,8 @@ $RECYCLE.BIN/
 # Electron Forge output
 /.webpack/
 .forge/
+
+# Include all files in the jre directory
+# (Make sure jre/ is not ignored)
+!jre/
+!jre/**
