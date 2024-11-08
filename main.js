@@ -2,6 +2,7 @@ const { app, BrowserWindow } = require('electron');
 const path = require('node:path');
 const { updateElectronApp } = require('update-electron-app');
 const { spawn } = require('child_process');
+const os = require('os');
 updateElectronApp();
 
 let javaProcess;
@@ -20,11 +21,34 @@ async function createWindow() {
 
     window.loadFile('index.html');
 
+    const platform = os.platform();
+    console.log(platform)
     const jarPath = isDev
         ? path.join(__dirname, 'demo/target/demo-0.0.1-SNAPSHOT.jar') // Development mode path
         : path.join(process.resourcesPath, 'backend/demo-0.0.1-SNAPSHOT.jar'); // Packaged app path
 
-    javaProcess = spawn('java', ['-jar', jarPath]);
+    let javaPath;
+
+
+    if (isDev) {
+        javaPath = 'java'; // Use system-installed Java in development mode
+    } else {
+        switch (platform) {
+            case 'win32':
+                javaPath = path.join(process.resourcesPath, 'jre/windows/jdk-17.0.13+11-jre/bin/java.exe'); // Windows production path
+                break;
+            case 'darwin':
+                javaPath = path.join(process.resourcesPath, 'jre/macos/jdk-17.0.13+11-jre/Contents/Home/bin/java'); // macOS production path
+                break;
+            case 'linux':
+                javaPath = path.join(process.resourcesPath, 'jre/linux/jdk-17.0.13+11-jre/bin/java'); // Linux production path
+                break;
+            default:
+                throw new Error(`Unsupported platform: ${platform}`);
+        }
+    }
+
+    javaProcess = spawn(javaPath, ['-jar', jarPath]);
 
     javaProcess.stdout.on('data', (data) => {
         console.log(`Output: ${data}`);

@@ -1,10 +1,28 @@
 const { FusesPlugin } = require('@electron-forge/plugin-fuses');
 const { FuseV1Options, FuseVersion } = require('@electron/fuses');
+const os = require('os');
+
+const platform = os.platform();
+
+let extraResources;
+switch (platform) {
+  case 'win32':
+    extraResources = ['./backend', './jre/windows/jdk-17.0.13+11-jre'];
+    break;
+  case 'darwin':
+    extraResources = ['./backend', './jre/macos/jdk-17.0.13+11-jre'];
+    break;
+  case 'linux':
+    extraResources = ['./backend', './jre/linux/jdk-17.0.13+11-jre'];
+    break;
+  default:
+    throw new Error(`Unsupported platform: ${platform}`);
+}
 
 module.exports = {
   packagerConfig: {
     asar: true,
-    extraResource: ['./backend'],
+    extraResource: extraResources,
   },
   rebuildConfig: {},
   makers: [
