@@ -19,7 +19,10 @@ async function createWindow() {
         }
     });
 
-    window.loadFile('index.html');
+    const devURL = 'http://localhost:3000'; // Vite dev server URL
+    const prodURL = `file://${path.join(__dirname, 'dist/index.html')}`;
+
+    window.loadURL(isDev ? devURL : prodURL);
 
     const platform = os.platform();
     console.log(platform)
