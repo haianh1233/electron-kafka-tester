@@ -3,8 +3,11 @@ const path = require('node:path');
 const { updateElectronApp } = require('update-electron-app');
 const { spawn } = require('child_process');
 const os = require('os');
+const express = require('express');
+
 updateElectronApp();
 
+let server;
 let javaProcess;
 
 async function createWindow() {
@@ -15,14 +18,27 @@ async function createWindow() {
         height: 600,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
-            nodeIntegration: true
+            nodeIntegration: false,
+            contextIsolation: true,
         }
     });
 
-    const devURL = 'http://localhost:3000'; // Vite dev server URL
-    const prodURL = `file://${path.join(__dirname, 'dist/index.html')}`;
+    if (isDev) {
+        window.loadURL('http://localhost:3000');
+    } else {
+        // Production: Serve from Express
+        const expressApp = express();
+        const distPath = path.join(process.resourcesPath, 'dist');
 
-    window.loadURL(isDev ? devURL : prodURL);
+        expressApp.use(express.static(distPath));
+
+        // Start the server on an available port
+        server = expressApp.listen(3001, () => {
+            const prodURL = `http://localhost:3001/index.html`;
+            console.log("Production URL:", prodURL);
+            window.loadURL(prodURL);
+        });
+    }
 
     const platform = os.platform();
     console.log(platform)
@@ -81,4 +97,7 @@ app.on('window-all-closed', () => {
         console.log('Stopping Java process...');
         javaProcess.kill('SIGINT');
     }
+
+    if (server) server.close();
+
 })
