@@ -8,9 +8,9 @@
     "test": "echo \\\"Error: no backend specified\\\" && exit 1",
     "build:backend": "cd demo && mvn clean package && mkdir -p ../backend && cp target/demo-0.0.1-SNAPSHOT.jar ../backend",
     "build:frontend": "vite build --config vite.config.js",
-    "package": "npm run build:backend && npm run build:frontend && electron-forge package",
-    "make": "npm run build:backend && npm run build:frontend && electron-forge make",
-    "publish": "npm run build:backend && npm run build:frontend && electron-forge publish"
+    "package": "if [ \"$LOCAL_BUILD\" = \"true\" ]; then npm run build:backend; fi && npm run build:frontend && electron-forge package",
+    "make": "if [ \"$LOCAL_BUILD\" = \"true\" ]; then npm run build:backend; fi && npm run build:frontend && electron-forge make",
+    "publish": "if [ \"$LOCAL_BUILD\" = \"true\" ]; then npm run build:backend; fi && npm run build:frontend && electron-forge publish"
   },
   "repository": {
     "type": "git",
