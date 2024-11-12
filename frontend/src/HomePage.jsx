@@ -1,96 +1,161 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Button, Space, Input, Typography, message, List } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Button, Space, Input, Typography, message, Table } from 'antd';
+import { DeleteOutlined, LoadingOutlined } from '@ant-design/icons'; // Import the icons
 import axios from 'axios';
 
 const { Title, Text } = Typography;
 
-const BACKEND_HEALTH_URL = 'http://localhost:8080/api/v1/clusters/health';
+const ADD_CLUSTER_URL = 'http://localhost:8080/api/v1/clusters';
+const GET_CLUSTERS_URL = 'http://localhost:8080/api/v1/clusters';
+const DELETE_CLUSTER_URL = (id) => `http://localhost:8080/api/v1/clusters/${id}`;
 
 const HomePage = () => {
-    const navigate = useNavigate();
-    const [brokers, setBrokers] = useState([]);
-    const [brokerInput, setBrokerInput] = useState('');
-    const [healthStatus, setHealthStatus] = useState(null);
+    const [clusterName, setClusterName] = useState('');
+    const [clusterUrl, setClusterUrl] = useState('');
     const [loading, setLoading] = useState(false);
+    const [clusters, setClusters] = useState([]);
+    const [lastRefreshTime, setLastRefreshTime] = useState(null);
+    const [refreshing, setRefreshing] = useState(false);
 
-    const addBroker = () => {
-        if (brokerInput) {
-            setBrokers([...brokers, brokerInput]);
-            setBrokerInput('');
-        } else {
-            message.warning('Please enter a broker URL.');
-        }
+    const handleClusterNameChange = (e) => {
+        setClusterName(e.target.value);
     };
 
-    const removeBroker = (index) => {
-        setBrokers(brokers.filter((_, i) => i !== index));
+    const handleClusterUrlChange = (e) => {
+        setClusterUrl(e.target.value);
     };
 
-    const handleBrokerInputChange = (e) => {
-        setBrokerInput(e.target.value);
-    };
-
-    const checkKafkaHealth = async () => {
-        if (brokers.length === 0) {
-            message.warning('Please add at least one broker URL.');
+    const addCluster = async () => {
+        if (!clusterUrl) {
+            message.warning('Please enter a cluster URL.');
             return;
         }
 
+        const name = clusterName || clusterUrl;
+
         setLoading(true);
         try {
-            const response = await axios.post(BACKEND_HEALTH_URL, { brokers });
-            setHealthStatus(response.data);
-            message.success('Health check successful');
+            await axios.post(ADD_CLUSTER_URL, { name, url: clusterUrl });
+            message.success('Cluster added successfully');
+            fetchClusters();
+            setClusterName('');
+            setClusterUrl('');
         } catch (error) {
-            setHealthStatus('Kafka is not healthy');
-            message.error('Health check failed');
+            message.error('Failed to add cluster');
         } finally {
             setLoading(false);
         }
     };
 
+    const deleteCluster = async (id) => {
+        try {
+            await axios.delete(DELETE_CLUSTER_URL(id));
+            message.success('Cluster deleted successfully');
+            fetchClusters();
+        } catch (error) {
+            message.error('Failed to delete cluster');
+        }
+    };
+
+    const fetchClusters = async () => {
+        setRefreshing(true);
+        try {
+            const response = await axios.get(GET_CLUSTERS_URL);
+            setClusters(response.data);
+            setLastRefreshTime(new Date().toLocaleTimeString());
+        } catch (error) {
+            message.error('Failed to load clusters');
+        } finally {
+            setTimeout(() => {
+                setRefreshing(false);
+            }, 1000);
+        }
+    };
+
+    useEffect(() => {
+        fetchClusters();
+        const intervalId = setInterval(fetchClusters, 10000);
+
+        return () => clearInterval(intervalId);
+    }, []);
+
+    // Ant Design Table columns for displaying clusters
+    const columns = [
+        {
+            title: 'Cluster Name',
+            dataIndex: 'name',
+            key: 'name',
+        },
+        {
+            title: 'Broker URL',
+            dataIndex: 'url',
+            key: 'url',
+        },
+        {
+            title: 'Health Status',
+            dataIndex: 'healthy',
+            key: 'healthy',
+            render: (isHealthy) => (
+                <Text type={isHealthy ? 'success' : 'danger'}>
+                    {isHealthy ? 'Healthy' : 'Unhealthy'}
+                </Text>
+            ),
+        },
+        {
+            title: 'Actions',
+            key: 'actions',
+            render: (text, record) => (
+                <Button
+                    type="link"
+                    icon={<DeleteOutlined />}
+                    danger
+                    onClick={() => deleteCluster(record.id)}
+                >
+                    Delete
+                </Button>
+            ),
+        },
+    ];
+
     return (
         <div>
-            <Title level={2}>Kafka Broker Health Check</Title>
+            <Title level={2}>Kafka Cluster Management</Title>
             <Space direction="vertical" style={{ width: '100%' }}>
                 <Input
-                    placeholder="Enter Kafka Broker URL (e.g., localhost:9092)"
-                    value={brokerInput}
-                    onChange={handleBrokerInputChange}
-                    onPressEnter={addBroker}
+                    placeholder="Enter Cluster Name (optional)"
+                    value={clusterName}
+                    onChange={handleClusterNameChange}
                 />
-                <Button onClick={addBroker}>Add Broker</Button>
-
-                <List
-                    bordered
-                    dataSource={brokers}
-                    renderItem={(broker, index) => (
-                        <List.Item
-                            actions={[
-                                <Button type="link" onClick={() => removeBroker(index)}>Remove</Button>
-                            ]}
-                        >
-                            {broker}
-                        </List.Item>
-                    )}
-                    style={{ marginTop: 16 }}
+                <Input
+                    placeholder="Enter Kafka Broker URL (e.g., localhost:9092)"
+                    value={clusterUrl}
+                    onChange={handleClusterUrlChange}
+                    onPressEnter={addCluster}
+                    style={{ marginTop: 8 }}
                 />
 
                 <Button
                     type="primary"
-                    onClick={checkKafkaHealth}
+                    onClick={addCluster}
                     loading={loading}
                     style={{ marginTop: 16 }}
                 >
-                    Check Health
+                    Add Cluster
                 </Button>
 
-                {healthStatus && (
-                    <Text type={healthStatus === 'Kafka is not healthy' ? 'danger' : 'success'}>
-                        {healthStatus}
+                <Title level={3} style={{ marginTop: 32 }}>Cluster List</Title>
+                {lastRefreshTime && (
+                    <Text style={{ fontSize: '14px', color: 'gray' }}>
+                        Last refreshed at: {lastRefreshTime}{' '}
+                        {refreshing && <LoadingOutlined spin />}
                     </Text>
                 )}
+                <Table
+                    columns={columns}
+                    dataSource={clusters}
+                    rowKey="id"
+                    pagination={false}
+                />
             </Space>
         </div>
     );
