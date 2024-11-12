@@ -91,3 +91,6 @@ $RECYCLE.BIN/
 # (Make sure jre/ is not ignored)
 !jre/
 !jre/**
+
+# Backend
+backend/
