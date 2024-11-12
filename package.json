@@ -1,6 +1,6 @@
 {
   "name": "electron-kafka-tester",
-  "version": "1.1.13",
+  "version": "1.1.14",
   "description": "electron-kafka-tester",
   "main": "main.js",
   "scripts": {
