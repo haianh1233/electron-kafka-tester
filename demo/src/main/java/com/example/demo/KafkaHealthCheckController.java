@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/clusters")
 public class KafkaHealthCheckController {
 
     @PostMapping("/health")
