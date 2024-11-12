@@ -4,20 +4,24 @@ const os = require('os');
 
 const platform = os.platform();
 
-let extraResources;
+const commonResources = ['./backend', './dist'];
+let jrePath;
+
 switch (platform) {
   case 'win32':
-    extraResources = ['./backend', './jre/windows/jdk-17.0.13+11-jre'];
+    jrePath = './jre/windows/jdk-17.0.13+11-jre';
     break;
   case 'darwin':
-    extraResources = ['./backend', './jre/macos/jdk-17.0.13+11-jre'];
+    jrePath = './jre/macos/jdk-17.0.13+11-jre';
     break;
   case 'linux':
-    extraResources = ['./backend', './jre/linux/jdk-17.0.13+11-jre'];
+    jrePath = './jre/linux/jdk-17.0.13+11-jre';
     break;
   default:
     throw new Error(`Unsupported platform: ${platform}`);
 }
+
+const extraResources = [...commonResources, jrePath];
 
 module.exports = {
   packagerConfig: {

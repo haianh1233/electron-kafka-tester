@@ -6,9 +6,10 @@
   "scripts": {
     "start": "concurrently -k \"npx vite --config vite.config.js\" \"wait-on http://localhost:3000 && electron-forge start\"",
     "test": "echo \\\"Error: no backend specified\\\" && exit 1",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
-    "publish": "electron-forge publish"
+    "build:frontend": "vite build --config vite.config.js",
+    "package": "npm run build:frontend && electron-forge package",
+    "make": "npm run build:frontend && electron-forge make",
+    "publish": "npm run build:frontend && electron-forge publish"
   },
   "repository": {
     "type": "git",
