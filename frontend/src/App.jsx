@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { HashRouter, Route, Routes, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import LoadingPage from './LoadingPage';
-import ErrorPage from './ErrorPage';
-import { Button, Space, DatePicker, version } from 'antd';
 import HomePage from "./HomePage";
 
 const BACKEND_HEALTH_URL = 'http://localhost:8080/api/v1/health';
