@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Space, Input, Typography, message, Table } from 'antd';
+import {Button, Space, Input, Typography, message, Table, Row, Col} from 'antd';
 import { DeleteOutlined, LoadingOutlined } from '@ant-design/icons'; // Import the icons
 import axios from 'axios';
 import columnsConfig from './clusterTableColumns.jsx';
+import AddClusterDrawer from "./AddClusterDrawer";
 
 const { Title, Text } = Typography;
 
-const ADD_CLUSTER_URL = 'http://localhost:8080/api/v1/clusters';
-const GET_CLUSTERS_URL = 'http://localhost:8080/api/v1/clusters';
-const DELETE_CLUSTER_URL = (id) => `http://localhost:8080/api/v1/clusters/${id}`;
-const HEALTH_CHECK_URL = (id) => `http://localhost:8080/api/v1/clusters/${id}/health`;
+export const ADD_CLUSTER_URL = 'http://localhost:8080/api/v1/clusters';
+export const GET_CLUSTERS_URL = 'http://localhost:8080/api/v1/clusters';
+export const DELETE_CLUSTER_URL = (id) => `http://localhost:8080/api/v1/clusters/${id}`;
+export const HEALTH_CHECK_URL = (id) => `http://localhost:8080/api/v1/clusters/${id}/health`;
 
 const HomePage = () => {
     const [clusterName, setClusterName] = useState('');
@@ -89,13 +90,15 @@ const HomePage = () => {
         } finally {
             setTimeout(() => {
                 setRefreshing(false);
-            }, 1000);
+            }, 500);
+            setRefreshing(false);
+
         }
     };
 
     useEffect(() => {
         fetchClusters();
-        const intervalId = setInterval(fetchClusters, 10000);
+        const intervalId = setInterval(fetchClusters, 20_000);
 
         return () => clearInterval(intervalId);
     }, []);
@@ -104,40 +107,24 @@ const HomePage = () => {
         <div>
             <Title level={2}>Kafka Cluster Management</Title>
             <Space direction="vertical" style={{ width: '100%' }}>
-                <Input
-                    placeholder="Enter Cluster Name (optional)"
-                    value={clusterName}
-                    onChange={handleClusterNameChange}
-                />
-                <Input
-                    placeholder="Enter Kafka Broker URL (e.g., localhost:9092)"
-                    value={clusterUrl}
-                    onChange={handleClusterUrlChange}
-                    onPressEnter={addCluster}
-                    style={{ marginTop: 8 }}
-                />
-
-                <Button
-                    type="primary"
-                    onClick={addCluster}
-                    loading={loading}
-                    style={{ marginTop: 16 }}
-                >
-                    Add Cluster
-                </Button>
-
-                <Title level={3} style={{ marginTop: 32 }}>Cluster List</Title>
-                {lastRefreshTime && (
-                    <Text style={{ fontSize: '14px', color: 'gray' }}>
-                        Last refreshed at: {lastRefreshTime}{' '}
-                        {refreshing && <LoadingOutlined spin />}
-                    </Text>
-                )}
+                <Row justify="space-between" align="middle">
+                    <Col>
+                        {lastRefreshTime && (
+                            <Text style={{ fontSize: '14px', color: 'gray' }}>
+                                Last refreshed at: {lastRefreshTime}{' '}
+                                {refreshing && <LoadingOutlined spin />}
+                            </Text>
+                        )}
+                    </Col>
+                    <Col>
+                        <AddClusterDrawer onClusterCreated={fetchClusters} />
+                    </Col>
+                </Row>
                 <Table
                     columns={columnsConfig(deleteCluster, checkHealth, loadingClusterId)}
                     dataSource={clusters}
                     rowKey="id"
-                    pagination={false}
+                    pagination={true}
                 />
             </Space>
         </div>
