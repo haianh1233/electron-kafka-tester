@@ -8,6 +8,8 @@
     "test": "echo \\\"Error: no backend specified\\\" && exit 1",
     "build:backend": "cd demo && mvn clean package && mkdir -p ../backend && cp target/demo-0.0.1-SNAPSHOT.jar ../backend",
     "build:frontend": "vite build --config vite.config.js",
+    "dev-make": "npm run build:backend && npm run build:frontend && electron-forge make",
+    "dev-package": "npm run build:backend && npm run build:frontend && electron-forge package",
     "package": "npm run build:frontend && electron-forge package",
     "make": "npm run build:frontend && electron-forge make",
     "publish": "npm run build:frontend && electron-forge publish"
