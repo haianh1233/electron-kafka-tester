@@ -1,6 +1,0 @@
-CREATE TABLE cluster (
-    id LONG PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(255) NOT NULL,
-    url VARCHAR(255) NOT NULL,
-    healthy BOOLEAN NOT NULL
-);

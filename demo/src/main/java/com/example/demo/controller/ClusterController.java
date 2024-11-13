@@ -25,8 +25,7 @@ public class ClusterController {
 
     @PostMapping
     public ResponseEntity<Cluster> createCluster(@RequestBody Cluster cluster) {
-        cluster.setHealthy(clusterService.checkKafkaHealth(cluster.getUrl()));
-        Cluster savedCluster = clusterRepository.save(cluster);
+        Cluster savedCluster = clusterService.saveCluster(cluster);
         return new ResponseEntity<>(savedCluster, HttpStatus.CREATED);
     }
 
@@ -36,40 +35,43 @@ public class ClusterController {
 
         if (cluster.isPresent()) {
             return ResponseEntity.ok(cluster.get());
-        } else {
-            return ResponseEntity.notFound().build();
         }
+
+        return ResponseEntity.notFound().build();
     }
+
+    @GetMapping("/{id}/health")
+    public ResponseEntity<String> checkClusterHealth(@PathVariable Long id) {
+        return clusterService.getClusterById(id)
+                .map(cluster -> clusterService.checkHealth(cluster)
+                        ? ResponseEntity.ok("Cluster is healthy")
+                        : ResponseEntity.status(HttpStatus.FAILED_DEPENDENCY).body("Cluster is not healthy"))
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+
 
     @GetMapping
     public ResponseEntity<List<Cluster>> getAllClusters() {
-        List<Cluster> clusters = clusterRepository.findAll();
+        List<Cluster> clusters = clusterService.getAllClusters();
         return ResponseEntity.ok(clusters);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateCluster(@PathVariable Long id, @RequestBody Cluster clusterDetails) {
-        Optional<Cluster> clusterOptional = clusterRepository.findById(id);
-        if (clusterOptional.isPresent()) {
-            Cluster existingCluster = clusterOptional.get();
-            existingCluster.setName(clusterDetails.getName());
-            existingCluster.setUrl(clusterDetails.getUrl());
-            existingCluster.setHealthy(clusterDetails.isHealthy());
-            Cluster updatedCluster = clusterRepository.save(existingCluster);
+        Optional<Cluster> cluster = clusterService.getClusterById(id);
+
+        if (cluster.isPresent()) {
+            Cluster updatedCluster = clusterService.updateCluster(id, clusterDetails);
             return ResponseEntity.ok(updatedCluster);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Cluster not found");
         }
+
+        return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCluster(@PathVariable Long id) {
-        if (clusterRepository.existsById(id)) {
-            clusterRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        clusterService.deleteCluster(id);
+        return ResponseEntity.noContent().build();
     }
 }

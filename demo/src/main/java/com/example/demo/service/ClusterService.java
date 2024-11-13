@@ -5,7 +5,9 @@ import com.example.demo.repository.ClusterRepository;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.AdminClientConfig;
@@ -19,16 +21,25 @@ public class ClusterService {
         this.clusterRepository = clusterRepository;
     }
 
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRate = 30_000)
     public void checkClustersHealth() {
         List<Cluster> clusters = clusterRepository.findAll();
         for (Cluster cluster : clusters) {
-            boolean isHealthy = checkKafkaHealth(cluster.getUrl());
-            if (cluster.isHealthy() != isHealthy) {
-                cluster.setHealthy(isHealthy);
-                clusterRepository.save(cluster);
-            }
+            updateClusterHealth(cluster);
         }
+    }
+
+    public boolean checkHealth(Cluster cluster) {
+        return updateClusterHealth(cluster);
+    }
+
+    private boolean updateClusterHealth(Cluster cluster) {
+        boolean isHealthy = checkKafkaHealth(cluster.getUrl());
+        cluster.setHealthy(isHealthy);
+        cluster.setUpdatedDate(LocalDateTime.now());
+        clusterRepository.save(cluster);
+
+        return isHealthy;
     }
 
     public boolean checkKafkaHealth(String brokerUrl) {
@@ -47,5 +58,33 @@ public class ClusterService {
             System.out.println("Error while checking health of cluster: " + brokerUrl + "-" + e.getMessage());
             return false;
         }
+    }
+
+    public Cluster saveCluster(Cluster cluster) {
+        cluster.setHealthy(checkKafkaHealth(cluster.getUrl()));
+        return clusterRepository.save(cluster);
+    }
+
+    public List<Cluster> getAllClusters() {
+        return clusterRepository.findAll();
+    }
+
+    public Optional<Cluster> getClusterById(Long id) {
+        return clusterRepository.findById(id);
+    }
+
+    public Cluster updateCluster(Long id, Cluster clusterDetails) {
+        Cluster existingCluster = clusterRepository.findById(id).orElse(null);
+        if (existingCluster != null) {
+            existingCluster.setName(clusterDetails.getName());
+            existingCluster.setUrl(clusterDetails.getUrl());
+            existingCluster.setHealthy(clusterDetails.isHealthy());
+            return clusterRepository.save(existingCluster);
+        }
+        return null;
+    }
+
+    public void deleteCluster(Long id) {
+        clusterRepository.deleteById(id);
     }
 }

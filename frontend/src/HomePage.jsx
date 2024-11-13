@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Button, Space, Input, Typography, message, Table } from 'antd';
 import { DeleteOutlined, LoadingOutlined } from '@ant-design/icons'; // Import the icons
 import axios from 'axios';
+import columnsConfig from './clusterTableColumns.jsx';
 
 const { Title, Text } = Typography;
 
 const ADD_CLUSTER_URL = 'http://localhost:8080/api/v1/clusters';
 const GET_CLUSTERS_URL = 'http://localhost:8080/api/v1/clusters';
 const DELETE_CLUSTER_URL = (id) => `http://localhost:8080/api/v1/clusters/${id}`;
+const HEALTH_CHECK_URL = (id) => `http://localhost:8080/api/v1/clusters/${id}/health`;
 
 const HomePage = () => {
     const [clusterName, setClusterName] = useState('');
@@ -16,6 +18,7 @@ const HomePage = () => {
     const [clusters, setClusters] = useState([]);
     const [lastRefreshTime, setLastRefreshTime] = useState(null);
     const [refreshing, setRefreshing] = useState(false);
+    const [loadingClusterId, setLoadingClusterId] = useState(null);
 
     const handleClusterNameChange = (e) => {
         setClusterName(e.target.value);
@@ -57,6 +60,24 @@ const HomePage = () => {
         }
     };
 
+    const checkHealth = async (id) => {
+        setLoadingClusterId(id);
+        try {
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+            const response = await axios.get(HEALTH_CHECK_URL(id));
+
+            if (response.status === 200) {
+                message.success('Cluster is healthy');
+            } else {
+                message.error('Cluster is unhealthy');
+            }
+        } catch (error) {
+            message.error('Cluster is unhealthy');
+        } finally {
+            setLoadingClusterId(null);
+        }
+    };
+
     const fetchClusters = async () => {
         setRefreshing(true);
         try {
@@ -78,44 +99,6 @@ const HomePage = () => {
 
         return () => clearInterval(intervalId);
     }, []);
-
-    // Ant Design Table columns for displaying clusters
-    const columns = [
-        {
-            title: 'Cluster Name',
-            dataIndex: 'name',
-            key: 'name',
-        },
-        {
-            title: 'Broker URL',
-            dataIndex: 'url',
-            key: 'url',
-        },
-        {
-            title: 'Health Status',
-            dataIndex: 'healthy',
-            key: 'healthy',
-            render: (isHealthy) => (
-                <Text type={isHealthy ? 'success' : 'danger'}>
-                    {isHealthy ? 'Healthy' : 'Unhealthy'}
-                </Text>
-            ),
-        },
-        {
-            title: 'Actions',
-            key: 'actions',
-            render: (text, record) => (
-                <Button
-                    type="link"
-                    icon={<DeleteOutlined />}
-                    danger
-                    onClick={() => deleteCluster(record.id)}
-                >
-                    Delete
-                </Button>
-            ),
-        },
-    ];
 
     return (
         <div>
@@ -151,7 +134,7 @@ const HomePage = () => {
                     </Text>
                 )}
                 <Table
-                    columns={columns}
+                    columns={columnsConfig(deleteCluster, checkHealth, loadingClusterId)}
                     dataSource={clusters}
                     rowKey="id"
                     pagination={false}
