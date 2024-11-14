@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {Button, Col, Drawer, Form, Input, message, Row} from 'antd';
 import {PlusOutlined} from "@ant-design/icons";
-import {addCluster} from "./api/clusterApi";
+import {addCluster} from "../api/clusterApi";
 
 const AddClusterDrawer = ({ onClusterCreated }) => {
     const [visible, setVisible] = useState(false);

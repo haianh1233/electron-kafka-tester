@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import {Space, Typography, message, Table, Row, Col} from 'antd';
 import { LoadingOutlined } from '@ant-design/icons'; // Import the icons
-import columnsConfig from './clusterTableColumns.jsx';
-import AddClusterDrawer from "./AddClusterDrawer";
-import {deleteCluster, getClusterHealth, getClusters} from "./api/clusterApi";
+import columnsConfig from '../components/clusterTableColumns.jsx';
+import AddClusterDrawer from "../components/AddClusterDrawer";
+import {deleteCluster, getClusterHealth, getClusters} from "../api/clusterApi";
+import PageContainer from "../layouts/PageContainer";
 
 const { Title, Text } = Typography;
 
-const HomePage = () => {
+const ClusterManagementPage = () => {
     const [clusters, setClusters] = useState([]);
     const [lastRefreshTime, setLastRefreshTime] = useState(null);
     const [refreshing, setRefreshing] = useState(false);
@@ -66,8 +67,7 @@ const HomePage = () => {
     }, []);
 
     return (
-        <div>
-            <Title level={2}>Kafka Cluster Management</Title>
+        <PageContainer title="Cluster Management">
             <Space direction="vertical" style={{ width: '100%' }}>
                 <Row justify="space-between" align="middle">
                     <Col>
@@ -89,8 +89,8 @@ const HomePage = () => {
                     pagination
                 />
             </Space>
-        </div>
+        </PageContainer>
     );
 };
 
-export default HomePage;
+export default ClusterManagementPage;
