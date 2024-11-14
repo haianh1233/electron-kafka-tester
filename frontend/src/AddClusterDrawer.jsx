@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import {Button, Col, Drawer, Form, Input, message, Row} from 'antd';
-import axios from 'axios';
-import {ADD_CLUSTER_URL} from "./HomePage";
 import {PlusOutlined} from "@ant-design/icons";
+import {addCluster} from "./api/clusterApi";
 
 const AddClusterDrawer = ({ onClusterCreated }) => {
     const [visible, setVisible] = useState(false);
@@ -29,7 +28,7 @@ const AddClusterDrawer = ({ onClusterCreated }) => {
 
         setLoading(true);
         try {
-            await axios.post(ADD_CLUSTER_URL, clusterData);
+            await addCluster(clusterData)
             message.success('Cluster created successfully');
             onClusterCreated();
             closeDrawer();
