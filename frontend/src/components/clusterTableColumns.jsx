@@ -6,19 +6,28 @@ const { Text } = Typography;
 
 const columns = (deleteCluster, checkHealth, loadingClusterId) => [
     {
-        title: 'Cluster Name',
+        title: 'Id',
+        dataIndex: 'id',
+        key: 'id',
+        sorter: (a, b) => a.id - b.id,
+    },
+    {
+        title: 'Name',
         dataIndex: 'name',
         key: 'name',
+        sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
-        title: 'Broker URL',
+        title: 'URL',
         dataIndex: 'url',
         key: 'url',
+        sorter: (a, b) => a.url.localeCompare(b.url),
     },
     {
-        title: 'Health Status',
+        title: 'Status',
         dataIndex: 'healthy',
         key: 'healthy',
+        sorter: (a, b) => a.healthy === b.healthy ? 0 : a.healthy ? -1 : 1,
         render: (isHealthy) => (
             <span>
                 {isHealthy ? (
@@ -39,6 +48,7 @@ const columns = (deleteCluster, checkHealth, loadingClusterId) => [
         title: 'Last Updated',
         key: 'updatedDate',
         dataIndex: 'updatedDate',
+        sorter: (a, b) => new Date(a.updatedDate) - new Date(b.updatedDate),
         render: (updatedDate) => {
             const date = new Date(updatedDate);
             return date.toLocaleString('en-GB', {
@@ -52,7 +62,7 @@ const columns = (deleteCluster, checkHealth, loadingClusterId) => [
         },
     },
     {
-        title: 'Check Health',
+        title: 'Check Status',
         key: 'checkHealth',
         render: (text, record) => (
             <Button

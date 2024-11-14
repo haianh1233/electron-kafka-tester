@@ -38,6 +38,7 @@ services:
     container_name: conduktor-gateway
     environment:
       KAFKA_BOOTSTRAP_SERVERS: redpanda-0:9092
+      GATEWAY_ADVERTISED_HOST: localhost
     depends_on:
       redpanda-0:
         condition: service_healthy

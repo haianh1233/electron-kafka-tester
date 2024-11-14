@@ -17,10 +17,10 @@ const ClusterManagementPage = () => {
     const handleDeleteCluster = async (id) => {
         try {
             await deleteCluster(id);
-            message.success('Cluster deleted successfully');
+            message.success('Cluster removed successfully');
             fetchClusters();
         } catch (error) {
-            message.error('Failed to delete cluster');
+            message.error('Failed to remove cluster');
         }
     };
 

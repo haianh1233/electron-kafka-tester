@@ -29,11 +29,11 @@ const AddClusterDrawer = ({ onClusterCreated }) => {
         setLoading(true);
         try {
             await addCluster(clusterData)
-            message.success('Cluster created successfully');
+            message.success('Cluster added successfully');
             onClusterCreated();
             closeDrawer();
         } catch (error) {
-            message.error('Failed to create cluster');
+            message.error('Failed to add cluster');
         } finally {
             setLoading(false);
         }
@@ -59,17 +59,17 @@ const AddClusterDrawer = ({ onClusterCreated }) => {
             >
                 <Form form={form} layout="vertical" onFinish={onFinish}>
                     <Form.Item
-                        label="Cluster Name"
+                        label="URL"
+                        name="url"
+                    >
+                        <Input placeholder="Enter broker URL (e.g., localhost:9092)" />
+                    </Form.Item>
+                    <Form.Item
+                        label="Name"
                         name="name"
                         rules={[{ required: false }]}
                     >
                         <Input placeholder="Enter cluster name" />
-                    </Form.Item>
-                    <Form.Item
-                        label="Broker URL"
-                        name="url"
-                    >
-                        <Input placeholder="Enter broker URL (e.g., localhost:9092)" />
                     </Form.Item>
                     <Row justify="space-between" gutter={16} style={{ marginTop: '16px' }}>
                         <Col span={12}>
