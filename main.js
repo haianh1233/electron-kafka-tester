@@ -21,6 +21,7 @@ const JRE_PATHS = {
 
 let server;
 let javaProcess;
+let backendProcess;
 
 async function checkBackendHealth(retries = 10, interval = 1000) {
     let attempts = 0;
@@ -40,6 +41,37 @@ async function checkBackendHealth(retries = 10, interval = 1000) {
     throw new Error("Backend failed to start after multiple attempts.");
 }
 
+async function startBackendInDevelopmentMode() {
+    return new Promise((resolve, reject) => {
+        backendProcess = spawn("mvn", ["spring-boot:run"], {
+            cwd: path.join(__dirname, "demo"),
+            stdio: "inherit",
+            shell: true
+        });
+
+        resolve();
+        backendProcess.stdout.on('data', (data) => {
+            console.log(`Output: ${data}`);
+        });
+
+        backendProcess.stderr.on('data', (data) => {
+            console.error(`Error: ${data}`);
+        });
+
+        backendProcess.on('close', (code) => {
+            console.log(`Java process exited with code ${code}`);
+        });
+    });
+}
+
+function stopBackend() {
+    if (backendProcess) {
+        backendProcess.kill("SIGINT");
+        backendProcess = null;
+        console.log("Backend stopped.");
+    }
+}
+
 async function createWindow() {
     const isDev = (await import('electron-is-dev')).default;
 
@@ -54,7 +86,13 @@ async function createWindow() {
     });
 
     if (isDev) {
+        console.log('Demo mode:', process.env.START_DEMO); // Check if START_DEMO is set
+        const isStartDemo = process.env.START_DEMO === "true";
+
         try {
+            if (isStartDemo) {
+                await startBackendInDevelopmentMode();
+            }
             await checkBackendHealth();
         } catch (error) {
             console.error("Backend health check failed:", error.message);
@@ -126,6 +164,7 @@ app.on('window-all-closed', () => {
         javaProcess.kill('SIGINT');
     }
 
-    if (server) server.close();
+    stopBackend();
 
+    if (server) server.close();
 })

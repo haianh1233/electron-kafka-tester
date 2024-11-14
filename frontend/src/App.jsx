@@ -5,7 +5,7 @@ import LoadingPage from './LoadingPage';
 import HomePage from "./HomePage";
 
 const BACKEND_HEALTH_URL = 'http://localhost:8080/api/v1/health';
-const INITIAL_DELAY = 500;
+const INITIAL_DELAY = 2_000;
 
 const App = () => {
     const [loading, setLoading] = useState(true);
@@ -25,14 +25,8 @@ const App = () => {
                 await new Promise(resolve => setTimeout(resolve, interval));
             }
         }
-        setError("Backend failed to start after multiple attempts.");
-        setLoading(false);
-    };
 
-    const retryHealthCheck = () => {
-        setError(null);
-        setLoading(true);
-        checkHealth();
+        setError("Backend failed to start after multiple attempts.");
     };
 
     useEffect(() => {
@@ -46,7 +40,6 @@ const App = () => {
     }, []);
 
     if (loading) return <LoadingPage />;
-    if (error) return <ErrorPage error={error} onRetry={retryHealthCheck} />;
 
     return (
         <HashRouter>
