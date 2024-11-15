@@ -1,17 +1,30 @@
 import React from 'react';
-import { Row, Col, Typography, Space } from 'antd';
-import { LoadingOutlined } from '@ant-design/icons';
+import {Row, Col, Typography, Button, Flex} from 'antd';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 
-const { Title, Text, Link } = Typography;
+const { Title } = Typography;
 
-const PageContainer = ({ title, children }) => {
+const PageContainer = ({ title, children, onBack }) => {
     return (
         <div style={{ minHeight: '100vh' }}>
             <div style={{ marginBottom: '24px', paddingBottom: '16px', borderBottom: '1px solid #f0f0f0' }}>
                 <Row justify="space-between" align="middle">
-                    <Col>
-                        <Title level={2} style={{ margin: 0 }}>{title}</Title>
-                    </Col>
+                    <Flex align="center">
+                        {onBack && (
+                            <Button
+                                icon={<ArrowLeftOutlined />}
+                                onClick={onBack}
+                                style={{ marginRight: '16px' }}
+                            >
+                            </Button>
+                        )}
+                        <Title
+                            level={onBack ? 3 : 2}
+                            style={{ margin: 0 }}
+                        >
+                            {title}
+                        </Title>
+                    </Flex>
                 </Row>
             </div>
             <div>

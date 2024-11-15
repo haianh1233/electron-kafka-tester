@@ -3,7 +3,7 @@ import { Spin, Typography } from 'antd';
 
 const { Text } = Typography;
 
-const LoadingPage = () => (
+const Loading = () => (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
         <Spin size="large" />
         <Text style={{ marginTop: 16, textAlign: 'center' }}>
@@ -15,4 +15,4 @@ const LoadingPage = () => (
     </div>
 );
 
-export default LoadingPage;
+export default Loading;

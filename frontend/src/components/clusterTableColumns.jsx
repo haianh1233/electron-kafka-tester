@@ -1,4 +1,4 @@
-import { Button, Typography } from 'antd';
+import {Button, Tag, Typography} from 'antd';
 import {CheckCircleOutlined, CloseCircleOutlined, DeleteOutlined, RightCircleTwoTone} from '@ant-design/icons';
 import React from 'react';
 
@@ -31,15 +31,13 @@ const columns = (deleteCluster, checkHealth, loadingClusterId) => [
         render: (isHealthy) => (
             <span>
                 {isHealthy ? (
-                    <>
-                        <CheckCircleOutlined style={{ color: 'green', marginRight: 4 }} />
-                        <Text type="success">Healthy</Text>
-                    </>
+                    <Tag icon={<CheckCircleOutlined />} color="success">
+                        Healthy
+                    </Tag>
                 ) : (
-                    <>
-                        <CloseCircleOutlined style={{ color: 'red', marginRight: 4 }} />
-                        <Text type="danger">Unhealthy</Text>
-                    </>
+                    <Tag icon={<CloseCircleOutlined />} color="error">
+                        Unhealthy
+                    </Tag>
                 )}
             </span>
         ),

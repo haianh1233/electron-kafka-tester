@@ -5,14 +5,16 @@ import columnsConfig from '../components/clusterTableColumns.jsx';
 import AddClusterDrawer from "../components/AddClusterDrawer";
 import {deleteCluster, getClusterHealth, getClusters} from "../api/clusterApi";
 import PageContainer from "../layouts/PageContainer";
+import {useNavigate} from "react-router-dom";
 
 const { Title, Text } = Typography;
 
-const ClusterManagementPage = () => {
+const ClusterManagement = () => {
     const [clusters, setClusters] = useState([]);
     const [lastRefreshTime, setLastRefreshTime] = useState(null);
     const [refreshing, setRefreshing] = useState(false);
     const [loadingClusterId, setLoadingClusterId] = useState(null);
+    const navigate = useNavigate();
 
     const handleDeleteCluster = async (id) => {
         try {
@@ -66,6 +68,10 @@ const ClusterManagementPage = () => {
         return () => clearInterval(intervalId);
     }, []);
 
+    const handleRowClick = (record) => {
+        navigate(`/clusters/${record.id}`);
+    };
+
     return (
         <PageContainer title="Cluster Management">
             <Space direction="vertical" style={{ width: '100%' }}>
@@ -87,10 +93,13 @@ const ClusterManagementPage = () => {
                     dataSource={clusters}
                     rowKey="id"
                     pagination
+                    onRow={(record) => ({
+                        onClick: () => handleRowClick(record),
+                    })}
                 />
             </Space>
         </PageContainer>
     );
 };
 
-export default ClusterManagementPage;
+export default ClusterManagement;

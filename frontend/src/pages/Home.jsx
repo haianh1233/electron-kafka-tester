@@ -6,7 +6,7 @@ import { AppstoreOutlined, ClusterOutlined } from '@ant-design/icons';
 const { Sider, Content } = Layout;
 const { Title } = Typography;
 
-const HomePage = () => {
+const Home = () => {
     const location = useLocation();
     const selectedKey = location.pathname.includes('/clusters') ? 'clusterManagement' : 'overview';
 
@@ -36,4 +36,4 @@ const HomePage = () => {
     );
 };
 
-export default HomePage;
+export default Home;
