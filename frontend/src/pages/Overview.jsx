@@ -1,10 +1,31 @@
 import PageContainer from "../layouts/PageContainer";
 import {Card, Col, Row, Statistic} from "antd";
+import PieChart from "../components/PieChart";
+import GaugeRating from "../components/GaugeRating";
+import ClusterScore from "../components/ClusterScore";
 
 const Overview = () => {
     return (
         <PageContainer title="Overview">
+            <Card>
+                <ClusterScore />
+            </Card>
+            <GaugeRating />
             <Row gutter={16}>
+
+            </Row>
+
+            <Row gutter={16}>
+                <Col span={8}>
+                    <Card bordered={false}>
+                        <GaugeRating />
+                    </Card>
+                </Col>
+                <Col span={8}>
+                    <Card bordered={false}>
+                        <PieChart />
+                    </Card>
+                </Col>
                 <Col span={8}>
                     <Card bordered={false}>
                         <Statistic
@@ -14,7 +35,6 @@ const Overview = () => {
                             prefix="$"
                         />
                     </Card>
-
                 </Col>
                 <Col span={8}>
                     <Card title="Card title" bordered={false}>

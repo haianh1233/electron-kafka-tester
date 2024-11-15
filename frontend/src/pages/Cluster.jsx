@@ -1,6 +1,8 @@
 import PageContainer from "../layouts/PageContainer";
 import {useNavigate} from "react-router-dom";
 import {Card, Col, Row, Statistic} from "antd";
+import GaugeRating from "../components/GaugeRating";
+import PieChart from "../components/PieChart";
 
 const Cluster = () => {
     const navigate = useNavigate();
@@ -12,7 +14,20 @@ const Cluster = () => {
 
     return (
         <PageContainer title="Conduktor gateway" onBack={handleBackToClusterManagement}>
-            <Row gutter={16}>
+            <Row gutter={[16, 16]} style={{ marginBottom: '10px'}}>
+                <Col span={12}>
+                    <Card bordered={false}>
+                        <GaugeRating />
+                    </Card>
+                </Col>
+                <Col span={12}>
+                    <Card bordered={false}>
+                        <PieChart />
+                    </Card>
+                </Col>
+            </Row>
+
+            <Row gutter={[16, 16]}>
                 <Col span={8}>
                     <Card bordered={false}>
                         <Statistic
