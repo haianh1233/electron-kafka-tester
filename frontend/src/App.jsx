@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import {HashRouter, Navigate, Route, Routes, useNavigate} from 'react-router-dom';
+import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom';
 import axios from 'axios';
 import Loading from './pages/Loading';
 import ClusterManagement from "./pages/ClusterManagement";
 import Home from "./pages/Home";
 import Overview from "./pages/Overview";
 import Cluster from "./pages/Cluster";
+import ClusterRule from "./pages/ClusterRule";
 
 const BACKEND_HEALTH_URL = 'http://localhost:8080/api/v1/health';
 const INITIAL_DELAY = 2_000;
@@ -45,18 +46,19 @@ const App = () => {
     if (loading) return <Loading />;
 
     return (
-        <HashRouter>
+        <BrowserRouter>
             <div style={{ padding: '0 24px' }}>
                 <Routes>
                     <Route path="/" element={<Navigate to="/overview" />} />
                     <Route path="/" element={<Home />}>
                         <Route path="overview" element={<Overview />} />
                         <Route path="clusters" element={<ClusterManagement />} />
-                        <Route path="/clusters/:id" element={<Cluster />} />
+                        <Route path="clusters/:id" element={<Cluster />} />
+                        <Route path="clusters/:id/rules/:ruleId" element={<ClusterRule />} />
                     </Route>
                 </Routes>
             </div>
-        </HashRouter>
+        </BrowserRouter>
     );
 };
 

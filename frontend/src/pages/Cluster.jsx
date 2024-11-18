@@ -1,5 +1,5 @@
 import PageContainer from "../layouts/PageContainer";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {Card, Col, Flex, Row, Statistic, Table} from "antd";
 import auditTableColumns from '../components/auditTableColumns.jsx';
 import PieChart from "../components/PieChart";
@@ -7,10 +7,17 @@ import Score from "../components/Score";
 
 const Cluster = () => {
     const navigate = useNavigate();
+    const location = useLocation();
 
     const handleBackToClusterManagement = () => {
         navigate('/clusters');
     }
+
+    const onButtonClick = (key) => {
+        const currentPath = location.pathname;
+        navigate(`${currentPath}/rules/${key}`);
+    };
+
 
     const failedRulesData = [
         {name: 'High', value: 3, itemStyle: {color: '#f5222d'}},
@@ -40,7 +47,6 @@ const Cluster = () => {
         { key: '19', name: 'Test S', status: false, level: 'Low', updatedDate: '2023-11-03T00:00:00', types: ['Performance', 'Cost'], labels: ['Compression', 'Topic'] },
         { key: '20', name: 'Test T', status: true, level: 'Low', updatedDate: '2023-11-21T00:00:00', types: ['Risk', 'Security', 'Cost'], labels: ['Topic', 'Encryption'] },
     ];
-
 
     return (
         <PageContainer title="Conduktor gateway" onBack={handleBackToClusterManagement}>
@@ -93,7 +99,7 @@ const Cluster = () => {
                 </Row>
 
                 <Table
-                    columns={auditTableColumns()}
+                    columns={auditTableColumns(onButtonClick)}
                     dataSource={auditDataSource}
                     rowKey="name"
                     pagination
