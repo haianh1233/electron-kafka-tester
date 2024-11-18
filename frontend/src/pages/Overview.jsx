@@ -2,13 +2,15 @@ import PageContainer from "../layouts/PageContainer";
 import {Card, Col, Row, Statistic} from "antd";
 import PieChart from "../components/PieChart";
 import GaugeRating from "../components/GaugeRating";
-import ClusterScore from "../components/ClusterScore";
+import Score from "../components/Score";
 
 const Overview = () => {
     return (
         <PageContainer title="Overview">
             <Card>
-                <ClusterScore />
+                <Score score='80' />
+                <Score score='30' />
+                <Score score='50' />
             </Card>
             <GaugeRating />
             <Row gutter={16}>

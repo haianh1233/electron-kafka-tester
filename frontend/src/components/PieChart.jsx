@@ -1,16 +1,35 @@
 import React from 'react';
 import ReactECharts from 'echarts-for-react';
 
-const PieChart = () => {
+const PieChart = ({ title = 'Pie Chart', data = [], height = '300px'}) => {
     const option = {
+        title: {
+            text: title,
+            left: 'left',
+            top: '5%',
+            textStyle: {
+                fontSize: 16,
+                fontWeight: 'bold'
+            }
+        },
         tooltip: {
             trigger: 'item'
         },
+        legend: {
+            orient: 'horizontal',
+            bottom: '0%',
+            textStyle: {
+                fontSize: 12,
+            },
+            formatter: (name) => {
+                const item = data.find((d) => d.name === name);
+                return `${name}: ${item?.value || 0}`;
+            }
+        },
         series: [
             {
-                name: 'Access From',
                 type: 'pie',
-                radius: ['40%', '80%'],
+                radius: ['50%', '90%'],
                 avoidLabelOverlap: false,
                 itemStyle: {
                     borderRadius: 10,
@@ -30,20 +49,14 @@ const PieChart = () => {
                 labelLine: {
                     show: false
                 },
-                data: [
-                    { value: 1048, name: 'Search Engine' },
-                    { value: 735, name: 'Direct' },
-                    { value: 580, name: 'Email' },
-                    { value: 484, name: 'Union Ads' },
-                    { value: 300, name: 'Video Ads' }
-                ]
+                data: data
             }
         ]
     };
 
     return (
         <div style={{ width: '100%', height: '100%' }}>
-            <ReactECharts option={option} style={{ height: '400px' }} />
+            <ReactECharts option={option} style={{ height: '300px' }} />
         </div>
     );
 };
