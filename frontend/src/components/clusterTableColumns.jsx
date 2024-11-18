@@ -4,7 +4,7 @@ import React from 'react';
 
 const { Text } = Typography;
 
-const columns = (deleteCluster, checkHealth, loadingClusterId) => [
+const clusterTableColumns = (deleteCluster, checkHealth, loadingClusterId) => [
     {
         title: 'Id',
         dataIndex: 'id',
@@ -87,4 +87,4 @@ const columns = (deleteCluster, checkHealth, loadingClusterId) => [
     },
 ];
 
-export default columns;
+export default clusterTableColumns;
