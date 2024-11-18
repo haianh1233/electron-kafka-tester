@@ -19,30 +19,27 @@ const Cluster = () => {
     ]
 
     const auditDataSource = [
-        { key: '1', name: 'Test A', status: true, level: 'Low', updatedDate: '2023-11-22T00:00:00' },
-        { key: '2', name: 'Test B', status: false, level: 'High', updatedDate: '2023-11-03T00:00:00' },
-        { key: '3', name: 'Test C', status: false, level: 'Moderate', updatedDate: '2023-11-21T00:00:00' },
-        { key: '4', name: 'Test D', status: true, level: 'High', updatedDate: '2023-11-28T00:00:00' },
-        { key: '5', name: 'Test E', status: true, level: 'High', updatedDate: '2023-11-16T00:00:00' },
-        { key: '6', name: 'Test F', status: true, level: 'Low', updatedDate: '2023-11-02T00:00:00' },
-        { key: '7', name: 'Test G', status: true, level: 'Moderate', updatedDate: '2023-11-09T00:00:00' },
-        { key: '8', name: 'Test H', status: false, level: 'Moderate', updatedDate: '2023-11-13T00:00:00' },
-        { key: '9', name: 'Test I', status: false, level: 'High', updatedDate: '2023-11-23T00:00:00' },
-        { key: '10', name: 'Test J', status: true, level: 'Low', updatedDate: '2023-11-11T00:00:00' },
-        { key: '11', name: 'Test K', status: true, level: 'High', updatedDate: '2023-11-21T00:00:00' },
-        { key: '12', name: 'Test L', status: true, level: 'Moderate', updatedDate: '2023-11-06T00:00:00' },
-        { key: '13', name: 'Test M', status: true, level: 'Low', updatedDate: '2023-11-27T00:00:00' },
-        { key: '14', name: 'Test N', status: true, level: 'Low', updatedDate: '2023-11-16T00:00:00' },
-        { key: '15', name: 'Test O', status: false, level: 'High', updatedDate: '2023-11-22T00:00:00' },
-        { key: '16', name: 'Test P', status: false, level: 'High', updatedDate: '2023-11-11T00:00:00' },
-        { key: '17', name: 'Test Q', status: false, level: 'Low', updatedDate: '2023-11-14T00:00:00' },
-        { key: '18', name: 'Test R', status: true, level: 'Low', updatedDate: '2023-11-14T00:00:00' },
-        { key: '19', name: 'Test S', status: true, level: 'Low', updatedDate: '2023-11-12T00:00:00' },
-        { key: '20', name: 'Test T', status: false, level: 'Low', updatedDate: '2023-11-09T00:00:00' }
+        { key: '1', name: 'Test A', status: false, level: 'Low', updatedDate: '2023-11-08T00:00:00', types: ['Performance', 'Cost', 'Good_Practice'], labels: ['Encryption', 'Cluster'] },
+        { key: '2', name: 'Test B', status: true, level: 'Low', updatedDate: '2023-11-11T00:00:00', types: ['Performance', 'Cost'], labels: ['Partition'] },
+        { key: '3', name: 'Test C', status: false, level: 'Low', updatedDate: '2023-11-20T00:00:00', types: ['Cost', 'Performance', 'Governance'], labels: ['Partition'] },
+        { key: '4', name: 'Test D', status: true, level: 'High', updatedDate: '2023-11-14T00:00:00', types: ['Cost', 'Good_Practice', 'Performance'], labels: ['Compression'] },
+        { key: '5', name: 'Test E', status: false, level: 'Low', updatedDate: '2023-11-12T00:00:00', types: ['Governance', 'Risk', 'Security'], labels: ['Partition'] },
+        { key: '6', name: 'Test F', status: true, level: 'Moderate', updatedDate: '2023-11-22T00:00:00', types: ['Security', 'Cost', 'Performance'], labels: ['Cluster', 'Encryption'] },
+        { key: '7', name: 'Test G', status: false, level: 'Low', updatedDate: '2023-11-19T00:00:00', types: ['Good_Practice', 'Security', 'Risk'], labels: ['Cluster', 'Partition'] },
+        { key: '8', name: 'Test H', status: true, level: 'Moderate', updatedDate: '2023-11-21T00:00:00', types: ['Security', 'Risk', 'Performance'], labels: ['Encryption', 'Cluster'] },
+        { key: '9', name: 'Test I', status: false, level: 'High', updatedDate: '2023-11-11T00:00:00', types: ['Security', 'Performance'], labels: ['Topic', 'Compression'] },
+        { key: '10', name: 'Test J', status: true, level: 'Low', updatedDate: '2023-11-08T00:00:00', types: ['Security', 'Cost', 'Performance'], labels: ['Cluster', 'Topic'] },
+        { key: '11', name: 'Test K', status: false, level: 'Low', updatedDate: '2023-11-23T00:00:00', types: ['Risk', 'Good_Practice'], labels: ['Compression', 'Partition'] },
+        { key: '12', name: 'Test L', status: true, level: 'Moderate', updatedDate: '2023-11-14T00:00:00', types: ['Performance', 'Cost'], labels: ['Partition', 'Topic'] },
+        { key: '13', name: 'Test M', status: false, level: 'Low', updatedDate: '2023-11-04T00:00:00', types: ['Governance', 'Good_Practice', 'Security'], labels: ['Topic'] },
+        { key: '14', name: 'Test N', status: true, level: 'Moderate', updatedDate: '2023-11-18T00:00:00', types: ['Performance', 'Good_Practice', 'Security'], labels: ['Topic', 'Compression'] },
+        { key: '15', name: 'Test O', status: false, level: 'Moderate', updatedDate: '2023-11-16T00:00:00', types: ['Risk', 'Performance'], labels: ['Topic'] },
+        { key: '16', name: 'Test P', status: true, level: 'Low', updatedDate: '2023-11-20T00:00:00', types: ['Risk', 'Performance', 'Good_Practice'], labels: ['Topic'] },
+        { key: '17', name: 'Test Q', status: false, level: 'High', updatedDate: '2023-11-05T00:00:00', types: ['Governance', 'Security', 'Risk'], labels: ['Topic'] },
+        { key: '18', name: 'Test R', status: true, level: 'High', updatedDate: '2023-11-23T00:00:00', types: ['Security', 'Cost'], labels: ['Topic', 'Cluster'] },
+        { key: '19', name: 'Test S', status: false, level: 'Low', updatedDate: '2023-11-03T00:00:00', types: ['Performance', 'Cost'], labels: ['Compression', 'Topic'] },
+        { key: '20', name: 'Test T', status: true, level: 'Low', updatedDate: '2023-11-21T00:00:00', types: ['Risk', 'Security', 'Cost'], labels: ['Topic', 'Encryption'] },
     ];
-
-
-    console.log(auditTableColumns())
 
 
     return (

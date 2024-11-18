@@ -2,13 +2,29 @@ import {Button, Tag, Typography} from 'antd';
 import {
     CheckCircleOutlined,
     CloseCircleOutlined,
-    DeleteOutlined,
     ExclamationCircleOutlined,
-    RightCircleTwoTone
 } from '@ant-design/icons';
 import React from 'react';
 
 const { Text } = Typography;
+
+const auditType = {
+    Cost: 'Cost',
+    Governance: 'Governance',
+    Security: 'Security',
+    Performance: 'Performance',
+    Good_Practice: 'Good Practice',
+    Risk: 'Risk',
+}
+
+const auditLabel = {
+    Topic: 'Topic',
+    Partition: 'Partition',
+    Cluster: 'Cluster',
+    Compression: 'Compression',
+    Encryption: 'Encryption',
+}
+
 
 const auditTableColumns = () => [
     {
@@ -18,23 +34,85 @@ const auditTableColumns = () => [
         sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
-        title: 'Status',
-        dataIndex: 'status',
-        key: 'status',
-        sorter: (a, b) => a.status === b.status ? 0 : a.status ? -1 : 1,
-        render: (isPassed) => (
-            <span>
-            {isPassed ? (
-                <Tag icon={<CheckCircleOutlined />} color="success">
-                    Pass
-                </Tag>
-            ) : (
-                <Tag icon={<CloseCircleOutlined />} color="error">
-                    Not Passed
-                </Tag>
-            )}
-            </span>
-        ),
+        title: 'Types',
+        dataIndex: 'types',
+        key: 'types',
+        render: (types) => {
+            if (!Array.isArray(types)) return null;
+
+            const sortedTypes = types.slice().sort((a, b) => a.localeCompare(b));
+
+            return sortedTypes.map((type) => {
+                let color = '';
+                switch (type) {
+                    case auditType.Cost:
+                        color = 'magenta';
+                        break;
+                    case auditType.Governance:
+                        color = 'red';
+                        break;
+                    case auditType.Security:
+                        color = 'volcano';
+                        break;
+                    case auditType.Performance:
+                        color = 'orange';
+                        break;
+                    case auditType.Good_Practice:
+                        color = 'gold';
+                        break;
+                    case auditType.Risk:
+                        color = 'lime';
+                        break;
+                    default:
+                        color = 'green';
+                        break;
+                }
+                return (
+                    <Tag color={color} key={type}>
+                        {auditType[type] || type}
+                    </Tag>
+                );
+            });
+        }
+    },
+    {
+        title: 'Labels',
+        dataIndex: 'labels',
+        key: 'labels',
+        render: (labels) => {
+            if (!Array.isArray(labels)) return null;
+
+            const sortedLabels = labels.slice().sort((a, b) => a.localeCompare(b));
+
+            return sortedLabels.map((label) => {
+                let color = '';
+                switch (label) {
+                    case auditLabel.Topic:
+                        color = 'magenta';
+                        break;
+                    case auditLabel.Partition:
+                        color = 'orange';
+                        break;
+                    case auditLabel.Cluster:
+                        color = 'gold';
+                        break;
+                    case auditLabel.Compression:
+                        color = 'lime';
+                        break;
+                    case auditLabel.Encryption:
+                        color = 'lime';
+                        break;
+                    default:
+                        color = 'green';
+                        break;
+                }
+                return (
+                    <Tag color={color} key={label}>
+                        {auditLabel[label] || label}
+                    </Tag>
+                );
+            });
+        }
     },
     {
         title: 'Level',
@@ -63,6 +141,25 @@ const auditTableColumns = () => [
                 </Tag>
             );
         }
+    },
+    {
+        title: 'Status',
+        dataIndex: 'status',
+        key: 'status',
+        sorter: (a, b) => a.status === b.status ? 0 : a.status ? -1 : 1,
+        render: (isPassed) => (
+            <span>
+            {isPassed ? (
+                <Tag icon={<CheckCircleOutlined />} color="success">
+                    Pass
+                </Tag>
+            ) : (
+                <Tag icon={<CloseCircleOutlined />} color="error">
+                    Not Passed
+                </Tag>
+            )}
+            </span>
+        ),
     },
     {
         title: 'Last Updated',
