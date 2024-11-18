@@ -24,17 +24,17 @@ const Cluster = () => {
             <Row gutter={[16, 16]} style={{ marginBottom: '10px'}}>
                 <Col span={8}>
                     <Card bordered={false}>
-                        <Score title="Cluster score" score="50" />
+                        <Score title="Cluster score" score="50" height="350px"/>
                     </Card>
                 </Col>
                 <Col span={8}>
                     <Card bordered={false}>
-                        <Score title="Passed rules" score="10" maxScore="30" />
+                        <Score title="Passed rules" score="10" maxScore="30" height="350px"/>
                     </Card>
                 </Col>
                 <Col span={8}>
                     <Card bordered={false}>
-                        <PieChart title="Failed Rules Breakdown" data={failedRulesData} />
+                        <PieChart title="Failed Rules Breakdown" data={failedRulesData} height="350px"/>
                     </Card>
                 </Col>
             </Row>

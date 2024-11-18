@@ -29,7 +29,7 @@ const PieChart = ({ title = 'Pie Chart', data = [], height = '300px'}) => {
         series: [
             {
                 type: 'pie',
-                radius: ['50%', '90%'],
+                radius: ['40%', '80%'],
                 avoidLabelOverlap: false,
                 itemStyle: {
                     borderRadius: 10,
@@ -56,7 +56,7 @@ const PieChart = ({ title = 'Pie Chart', data = [], height = '300px'}) => {
 
     return (
         <div style={{ width: '100%', height: '100%' }}>
-            <ReactECharts option={option} style={{ height: '300px' }} />
+            <ReactECharts option={option} style={{ height: height }} />
         </div>
     );
 };
